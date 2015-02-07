@@ -1,0 +1,5 @@
+[
+    { "caption": "CoolFormat: Quick Format",    "command": "coolformat",    "args": { "action": "quickFormat" }  },
+    { "caption": "CoolFormat: Selected Format",    "command": "coolformat",    "args": { "action": "selectedFormat" }  },
+    { "caption": "CoolFormat: Formatter Settings",    "command": "coolformat",    "args": { "action": "formatterSettings" }  }
+]
