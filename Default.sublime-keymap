@@ -1,0 +1,8 @@
+[
+    {
+        "keys": ["ctrl+alt+shift+q"], "command": "coolformat", "args": {"action": "quickFormat"}
+    },
+    {
+        "keys": ["ctrl+alt+shift+s"], "command": "coolformat", "args": {"action": "selectedFormat"}
+    }
+]

@@ -5,11 +5,17 @@ import sys
 class CoolformatCommand(sublime_plugin.TextCommand):	
 	def run(self, edit, action = 'quickFormat'):
 		if action == 'quickFormat':
-			self.doFormat(edit, False)
+			self.doFormatSafe(edit, False)
 		elif action == 'selectedFormat':
-			self.doFormat(edit, True)
+			self.doFormatSafe(edit, True)
 		else:
 			self.showSettings()
+
+	def doFormatSafe(self, edit, selected):
+		try:
+			self.doFormat(edit, selected)
+		except:
+			sublime.message_dialog('Cannot format this file!')
 
 	def doFormat(self, edit, selected):		
 		self.loadCFDll()
@@ -42,13 +48,10 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 			formatted_code = self.getFormattedCode(code, lang, line_eol, None)
 			view.replace(edit, region, formatted_code)
 
-		#sublime.message_dialog(formatted_code)
-
 	def showSettings(self):
 		self.loadCFDll()
 		if self.ShowSettings:
 			self.ShowSettings()
-		#self.view.insert(edit, 0, "Hello, World!")
 
 	def getInitIndent(self, point):
 		line_region = self.view.line(point)
@@ -75,7 +78,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 			return '\n'
 		else:
 			return '\r'
-		"""
+		"""	
 
 	def getFormattedCode(self, code, lang, line_eol, initIndent):
 		if self.DoFormatter:
@@ -94,11 +97,19 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 				strMsgOut = create_string_buffer(sizeMsgOut.value + 1)
 				if self.DoFormatter(lang, strTextIn, strTextOut, byref(sizeTextOut), strMsgOut, byref(sizeMsgOut), 0, strLineEol, strInitIndent):
 					if sys.version_info < (3, 0):
+						self.showOutput(strMsgOut.value)
 						return strTextOut.value
 					else:
+						self.showOutput(strMsgOut.value.decode())
 						return strTextOut.value.decode()
 		return ''
 
+	def showOutput(self, msg):
+		if len(msg) != 0:
+			self.view.window().run_command("show_panel", {"panel": "console"})
+			print('=========== CoolFormat Output Begin ===========')
+			print(msg)
+			print('=========== CoolFormat Output End ===========')
 
 	def loadCFDll(self):
 		if self.hInstCF == None:
