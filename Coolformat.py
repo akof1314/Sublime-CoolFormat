@@ -5,7 +5,7 @@ import sys
 class CoolformatCommand(sublime_plugin.TextCommand):
 	def run(self, edit, action = 'quickFormat'):
 		if action == 'quickFormat':
-			self.doFormat(edit, False)
+			self.doFormatSafe(edit, False)
 		elif action == 'selectedFormat':
 			self.doFormatSafe(edit, True)
 		else:
@@ -84,24 +84,15 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 		if self.DoFormatter:
 			sizeTextOut = c_int()
 			sizeMsgOut = c_int()
-			if sys.version_info < (3, 0):
-				strTextIn = c_char_p(code)
-				strLineEol = c_char_p(line_eol)
-				strInitIndent = c_char_p(initIndent) if initIndent else None
-			else:
-				strTextIn = c_char_p(code.encode())
-				strLineEol = c_char_p(line_eol.encode())
-				strInitIndent = c_char_p(initIndent.encode()) if initIndent else None
+			strTextIn = c_char_p(code.encode('utf-8'))
+			strLineEol = c_char_p(line_eol.encode('utf-8'))
+			strInitIndent = c_char_p(initIndent.encode('utf-8')) if initIndent else None
 			if self.DoFormatter(lang, strTextIn, None, byref(sizeTextOut), None, byref(sizeMsgOut), 0, strLineEol, strInitIndent):
 				strTextOut = create_string_buffer(sizeTextOut.value + 1)
 				strMsgOut = create_string_buffer(sizeMsgOut.value + 1)
 				if self.DoFormatter(lang, strTextIn, strTextOut, byref(sizeTextOut), strMsgOut, byref(sizeMsgOut), 0, strLineEol, strInitIndent):
-					if sys.version_info < (3, 0):
-						self.showOutput(strMsgOut.value)
-						return strTextOut.value
-					else:
-						self.showOutput(strMsgOut.value.decode())
-						return strTextOut.value.decode()
+					self.showOutput(strMsgOut.value.decode('utf-8'))
+					return strTextOut.value.decode('utf-8')
 		return ''
 
 	def showOutput(self, msg):
