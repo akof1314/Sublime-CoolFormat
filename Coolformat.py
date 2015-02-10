@@ -58,7 +58,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 		code = self.view.substr(line_region)
 		initIndent = ''
 		for _, ch in enumerate(code):
-			if ch != '' and ch != '\t':
+			if ch != ' ' and ch != '\t':
 				break
 			initIndent = initIndent + ch
 		return initIndent
