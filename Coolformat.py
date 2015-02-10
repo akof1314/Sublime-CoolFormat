@@ -2,10 +2,10 @@ import sublime, sublime_plugin
 from ctypes import *
 import sys
 
-class CoolformatCommand(sublime_plugin.TextCommand):	
+class CoolformatCommand(sublime_plugin.TextCommand):
 	def run(self, edit, action = 'quickFormat'):
 		if action == 'quickFormat':
-			self.doFormatSafe(edit, False)
+			self.doFormat(edit, False)
 		elif action == 'selectedFormat':
 			self.doFormatSafe(edit, True)
 		else:
@@ -17,14 +17,14 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 		except:
 			sublime.message_dialog('Cannot format this file!')
 
-	def doFormat(self, edit, selected):		
+	def doFormat(self, edit, selected):
 		self.loadCFDll()
 		if self.DoFormatter == None:
 			return
 
 		view = self.view
 		line_eol = self.getCFEol()
-		lang = self.getCFLang()	
+		lang = self.getCFLang()
 		if selected:
 			regions = []
 			for sel in view.sel():
@@ -69,7 +69,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 		return Synlanguage.lang_dict.get(lang, -1)
 
 	def getCFEol(self):
-		line_eol = self.view.line_endings()	
+		line_eol = self.view.line_endings()
 		return '\n'
 		"""
 		if line_eol == 'Windows':
@@ -78,7 +78,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 			return '\n'
 		else:
 			return '\r'
-		"""	
+		"""
 
 	def getFormattedCode(self, code, lang, line_eol, initIndent):
 		if self.DoFormatter:
@@ -113,7 +113,12 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 
 	def loadCFDll(self):
 		if self.hInstCF == None:
-			self.hInstCF = cdll.LoadLibrary(sublime.packages_path() + '/CoolFormat/CoolFormatLib.dll')
+			platform_name = sublime.platform()
+			if platform_name == 'windows':
+				dll_ext = '.dll'
+			else:
+				dll_ext = '.so'
+			self.hInstCF = cdll.LoadLibrary(sublime.packages_path() + '/CoolFormat/CoolFormatLib/cf_' + platform_name + '_' + sublime.arch() +'/CoolFormatLib' + dll_ext)
 			if self.hInstCF:
 				self.DoFormatter = self.hInstCF.DoFormatter
 				self.ShowSettings = self.hInstCF.ShowSettings
@@ -127,8 +132,8 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 class Synlanguage:
 	(
 	SYN_ACTIONSCRIPT,
-	SYN_ADA,	
-	SYN_ASM,	
+	SYN_ADA,
+	SYN_ASM,
 	SYN_ASP,
 	SYN_AUTOHOTKEY,
 	SYN_AUTOIT,
@@ -162,16 +167,16 @@ class Synlanguage:
 	SYN_XML
 	) = range(0, 34)
 	lang_dict = {
-	'C': SYN_CPP, 
-	'C++':SYN_CPP, 
-	'C#':SYN_CS, 
-	'CSS':SYN_CSS, 
-	'HTML':SYN_HTML, 
-	'Java':SYN_JAVA, 
-	'JavaScript':SYN_JAVASCRIPT, 
-	'JSON':SYN_JSON, 
+	'C': SYN_CPP,
+	'C++':SYN_CPP,
+	'C#':SYN_CS,
+	'CSS':SYN_CSS,
+	'HTML':SYN_HTML,
+	'Java':SYN_JAVA,
+	'JavaScript':SYN_JAVASCRIPT,
+	'JSON':SYN_JSON,
 	'Objective-C':SYN_OBJECTIVEC,
 	'Objective-C++':SYN_OBJECTIVEC,
-	'PHP':SYN_PHP, 
-	'SQL':SYN_SQL, 
+	'PHP':SYN_PHP,
+	'SQL':SYN_SQL,
 	'XML':SYN_XML }
