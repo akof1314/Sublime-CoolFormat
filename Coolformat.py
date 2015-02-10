@@ -5,7 +5,7 @@ import sys
 class CoolformatCommand(sublime_plugin.TextCommand):
 	def run(self, edit, action = 'quickFormat'):
 		if action == 'quickFormat':
-			self.doFormatSafe(edit, False)
+			self.doFormat(edit, False)
 		elif action == 'selectedFormat':
 			self.doFormatSafe(edit, True)
 		else:
@@ -109,10 +109,10 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 		if self.hInstCF == None:
 			platform_name = sublime.platform()
 			if platform_name == 'windows':
-				dll_ext = '.dll'
-			else:
-				dll_ext = '.so'
-			self.hInstCF = cdll.LoadLibrary(sublime.packages_path() + '/CoolFormat/CoolFormatLib/cf_' + platform_name + '_' + sublime.arch() +'/CoolFormatLib' + dll_ext)
+				dll_name = '/CoolFormatLib.dll'
+			elif platform_name == 'osx':
+				dll_name = '/libCoolFormatLib.dylib'
+			self.hInstCF = cdll.LoadLibrary(sublime.packages_path() + '/CoolFormat/CoolFormatLib/cf_' + platform_name + '_' + sublime.arch() + dll_name)
 			if self.hInstCF:
 				self.DoFormatter = self.hInstCF.DoFormatter
 				self.ShowSettings = self.hInstCF.ShowSettings
