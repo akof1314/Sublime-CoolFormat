@@ -49,9 +49,12 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 			view.replace(edit, region, formatted_code)
 
 	def showSettings(self):
+		self.view.window().open_file(sublime.packages_path() + '/CoolFormat/CoolFormatLib/CoolFormatConfig.cfconfig')
+		"""
 		self.loadCFDll()
 		if self.ShowSettings:
 			self.ShowSettings()
+		"""
 
 	def getInitIndent(self, point):
 		line_region = self.view.line(point)
