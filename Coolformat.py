@@ -112,6 +112,8 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 				dll_name = '/CoolFormatLib.dll'
 			elif platform_name == 'osx':
 				dll_name = '/libCoolFormatLib.dylib'
+			else:
+				dll_name = '/libCoolFormatLib.so'
 			self.hInstCF = cdll.LoadLibrary(sublime.packages_path() + '/CoolFormat/CoolFormatLib/cf_' + platform_name + '_' + sublime.arch() + dll_name)
 			if self.hInstCF:
 				self.DoFormatter = self.hInstCF.DoFormatter
