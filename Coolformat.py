@@ -1,11 +1,10 @@
 import sublime, sublime_plugin
 from ctypes import *
-import sys
 
 class CoolformatCommand(sublime_plugin.TextCommand):
 	def run(self, edit, action = 'quickFormat'):
 		if action == 'quickFormat':
-			self.doFormat(edit, False)
+			self.doFormatSafe(edit, False)
 		elif action == 'selectedFormat':
 			self.doFormatSafe(edit, True)
 		else:
@@ -14,7 +13,8 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 	def doFormatSafe(self, edit, selected):
 		try:
 			self.doFormat(edit, selected)
-		except:
+		except Exception as e:
+			print(str(e))
 			sublime.message_dialog('Cannot format this file!')
 
 	def doFormat(self, edit, selected):
