@@ -1,5 +1,9 @@
 import sublime, sublime_plugin
 from ctypes import *
+import os
+
+__file__ = os.path.normpath(os.path.abspath(__file__))
+__path__ = os.path.dirname(__file__)
 
 class CoolformatCommand(sublime_plugin.TextCommand):
 	def run(self, edit, action = 'quickFormat'):
@@ -49,7 +53,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 			view.replace(edit, region, formatted_code)
 
 	def showSettings(self):
-		self.view.window().open_file(sublime.packages_path() + '/CoolFormat/CoolFormatLib/CoolFormatConfig.cfconfig')
+		self.view.window().open_file(__path__ + '/CoolFormatLib/CoolFormatConfig.cfconfig')
 		"""
 		self.loadCFDll()
 		if self.ShowSettings:
@@ -114,7 +118,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 				dll_name = '/libCoolFormatLib.dylib'
 			else:
 				dll_name = '/libCoolFormatLib.so'
-			self.hInstCF = cdll.LoadLibrary(sublime.packages_path() + '/CoolFormat/CoolFormatLib/cf_' + platform_name + '_' + sublime.arch() + dll_name)
+			self.hInstCF = cdll.LoadLibrary(__path__ + '/CoolFormatLib/cf_' + platform_name + '_' + sublime.arch() + dll_name)
 			if self.hInstCF:
 				self.DoFormatter = self.hInstCF.DoFormatter
 				self.ShowSettings = self.hInstCF.ShowSettings
