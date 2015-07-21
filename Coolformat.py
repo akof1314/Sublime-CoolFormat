@@ -100,7 +100,7 @@ class CoolformatCommand(sublime_plugin.TextCommand):
 				if self.DoFormatter(lang, strTextIn, strTextOut, byref(sizeTextOut), strMsgOut, byref(sizeMsgOut), 0, strLineEol, strInitIndent):
 					self.showOutput(strMsgOut.value.decode('utf-8'))
 					return strTextOut.value.decode('utf-8')
-		return ''
+		return code
 
 	def showOutput(self, msg):
 		if len(msg) != 0:
