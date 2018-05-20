@@ -179,4 +179,5 @@ class Synlanguage:
 	'Objective-C++':SYN_OBJECTIVEC,
 	'PHP':SYN_PHP,
 	'SQL':SYN_SQL,
+	'Verilog':SYN_VERILOG,
 	'XML':SYN_XML }
